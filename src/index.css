@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background-image: url("./assets/a.jpg");
+  background-position: center;
+  background-size: cover;
+}
+button, input, select, textarea {
+  display: inline-block;
+  box-sizing: border-box;
+}
+input::placeholder {
+  color: #a0aec0;
+}
