@@ -1,20 +1,43 @@
-import Button from './Button'
+import Button from "./Button"
 
-const buttons = [
-  "C", "()", "%","÷",
-  "7", "8", "9", "×",
-  "4", "5", "6", "-",
-  "1", "2", "3", "+",
-  "0", ".", "=", "="
-];
+type Tecla = {
+  label: string
+  variante?: "numero" | "funcao" | "operador" | "igual"
+  nome?: string
+}
 
-function Keypad() {
- 
+const teclas: Tecla[] = [
+  { label: "C", variante: "funcao", nome: "Limpar tudo" },
+  { label: "()", variante: "funcao", nome: "Parênteses" },
+  { label: "%", variante: "funcao", nome: "Porcentagem" },
+  { label: "÷", variante: "operador", nome: "Dividir" },
+  { label: "7" }, { label: "8" }, { label: "9" },
+  { label: "×", variante: "operador", nome: "Multiplicar" },
+  { label: "4" }, { label: "5" }, { label: "6" },
+  { label: "-", variante: "operador", nome: "Subtrair" },
+  { label: "1" }, { label: "2" }, { label: "3" },
+  { label: "+", variante: "operador", nome: "Somar" },
+  { label: "0" },
+  { label: ".", nome: "Vírgula" },
+  { label: "⌫", variante: "funcao", nome: "Apagar" },
+  { label: "=", variante: "igual", nome: "Calcular" },
+]
 
+type KeypadProps = {
+  onPressionar: (tecla: string) => void
+}
+
+function Keypad({ onPressionar }: KeypadProps) {
   return (
     <div className="grid grid-cols-4 gap-2">
-     {buttons.map((label, index) => (
-        <Button key={index} label={label} />
+      {teclas.map((tecla) => (
+        <Button
+          key={tecla.label}
+          label={tecla.label === "." ? "," : tecla.label}
+          aria-label={tecla.nome}
+          variante={tecla.variante}
+          onClick={() => onPressionar(tecla.label)}
+        />
       ))}
     </div>
   )

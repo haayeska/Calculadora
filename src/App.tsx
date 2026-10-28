@@ -1,14 +1,7 @@
-import Card from './components/Card'
-import './index.css'
+import Card from "./components/Card"
 
 function App() {
- 
-
-  return (
-    <div>
-      <Card />
-    </div>
-  )
+  return <Card />
 }
 
 export default App

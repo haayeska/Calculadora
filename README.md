@@ -1,75 +1,69 @@
-# React + TypeScript + Vite
+# Calculadora
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Calculadora com parênteses, porcentagem e atalhos de teclado. Mostra o resultado em tempo real enquanto você digita, no padrão brasileiro (vírgula decimal e ponto nos milhares).
 
-Currently, two official plugins are available:
+**[Ver a calculadora funcionando](https://haayeska.github.io/Calculadora/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Funcionalidades
 
-## React Compiler
+- Soma, subtração, multiplicação e divisão respeitando a ordem das operações
+- Parênteses: o botão `()` decide sozinho se abre ou fecha
+- Porcentagem: `200 × 10%` dá `20`
+- Prévia do resultado enquanto a conta é digitada
+- Aviso de erro, como divisão por zero
+- Corrige imprecisões como `0,1 + 0,2` (dá `0,3`, e não `0,30000000000000004`)
+- Funciona pelo teclado físico
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Atalhos de teclado
 
-## Expanding the ESLint configuration
+| Tecla                  | Ação            |
+| ---------------------- | --------------- |
+| `0` a `9`, `,` ou `.`  | Digitar números |
+| `+` `-` `*` `/` `%`    | Operações       |
+| `(` `)`                | Parênteses      |
+| `Enter` ou `=`         | Calcular        |
+| `Backspace`            | Apagar o último |
+| `Esc`                  | Limpar tudo     |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Como o cálculo funciona
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+A conta é resolvida em [`src/lib/calcular.ts`](src/lib/calcular.ts) **sem usar `eval()`**, que executaria qualquer código digitado. O texto é quebrado em pedaços (números, operadores e parênteses) e resolvido por um analisador recursivo, em que cada nível de precedência é uma função:
 
 ```
+soma     →  produto  ( + ou -  produto )*
+produto  →  sinal    ( × ou ÷  sinal )*
+sinal    →  -sinal   ou  primario %*
+primario →  número   ou  ( soma )
+```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tecnologias
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- [React 19](https://react.dev/) com [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Como rodar
 
+Você precisa do [Node.js](https://nodejs.org/) 20 ou mais novo.
+
+```bash
+git clone https://github.com/haayeska/Calculadora.git
+cd Calculadora
+npm install
+npm run dev
+```
+
+## Estrutura
+
+```
+src/
+├── components/
+│   ├── Card.tsx      # Moldura da calculadora e atalhos de teclado
+│   ├── Display.tsx   # Visor com a conta e a prévia
+│   ├── Keypad.tsx    # Teclas
+│   └── Button.tsx    # Botão com as variações de cor
+├── hooks/
+│   └── useCalculadora.ts  # Regras do que cada tecla faz
+└── lib/
+    └── calcular.ts   # Analisador e formatação dos números
 ```
